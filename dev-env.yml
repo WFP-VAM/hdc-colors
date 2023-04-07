@@ -1,0 +1,42 @@
+# Conda environment for development, includes linting and testing tools
+#
+#  > mamba env create -f dev-env.yml
+#  > conda activate hdc-automap
+#  > pip install -e .
+#
+name: hdc-colors
+channels:
+  - conda-forge
+
+dependencies:
+  - python =3.9
+  - pip =20
+  - numpy=1.22.4
+
+  # tests and dev
+  ## to use from jupyter-lab: `python -m ipykernel install --user --name hdc-automap`
+  - ipykernel
+
+  ## linting tools
+  - autopep8
+  - autoflake
+  - black
+  - isort
+  - mock
+  - mypy
+  - pycodestyle
+  - pylint
+  - docutils
+  - pre-commit
+  ### shed dependencies
+  - pyyaml
+  - pyupgrade
+  - libcst
+
+  ## test
+  - pytest
+  - hypothesis
+  - pytest-cov
+  - pytest-timeout
+
+  # - pip:
