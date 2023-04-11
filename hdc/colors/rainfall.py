@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 """Color ramps for rainfall data"""
 from ._classes import HDCDiscreteRamp
 from .utils import INF

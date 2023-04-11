@@ -132,3 +132,6 @@ dmypy.json
 hdc/automap/templates/_layers/
 hdc/automap/templates/_logos/
 outputs/
+
+# vscode
+.vscode/
