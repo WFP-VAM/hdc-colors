@@ -2,6 +2,8 @@
 from ._classes import HDCDiscreteRamp
 from .utils import INF
 
+### Rainfall (aggregations)
+
 rfh_16_0_300 = HDCDiscreteRamp(
     values=[
         0,
@@ -516,6 +518,8 @@ rfh_16_0_4000 = HDCDiscreteRamp(
     ],
 )
 
+### Rainfall anomalies
+
 rfq_14_20_400 = HDCDiscreteRamp(
     values=[
         20,
@@ -601,7 +605,7 @@ ryq_14_50_200 = HDCDiscreteRamp(
         "#a002fa",
     ],
     labels=[
-        "< 50%,
+        "< 50%",
         "50-60%",
         "60-70%",
         "70-80%",
@@ -615,5 +619,239 @@ ryq_14_50_200 = HDCDiscreteRamp(
         "150-170%",
         "170-200%",
         "> 200%",
+    ],
+)
+
+
+### SPI (scaled by 1000)
+
+rxs = HDCDiscreteRamp(
+    values=[
+        -2000,
+        -1500,
+        -1200,
+        -700,
+        -500,
+        500,
+        700,
+        1200,
+        1500,
+        2000,
+        INF,
+    ],
+    colors=[
+        "#730000",
+        "#e70001",
+        "#ffaa01",
+        "#ffd37b",
+        "#ffff02",
+        "#f0f0f0",
+        "#beebff",
+        "#73b2ff",
+        "#0271ff",
+        "#004dad",
+        "#ad03e6",
+    ],
+    labels=[
+        "< -2.0",
+        "-1.5 to -2.0",
+        "-1.2 to -1.5",
+        "-0.7 to -1.2",
+        "-0.5 to -0.7",
+        "-0.5 to 0.5",
+        "0.5 to 0.7",
+        "0.7 to 1.2",
+        "1.2 to 1.5",
+        "1.5 to 2.0",
+        "> 2.0",
+    ],
+)
+
+### Daily indicators
+
+xlhie_12_0_10 = HDCDiscreteRamp(
+    values=[
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        INF,
+    ],
+    colors=[
+        "#fafafa",
+        "#d3f9d0",
+        "#a9e4a3",
+        "#5eab91",
+        "#9fffe8",
+        "#90e0ef",
+        "#00b1de",
+        "#0083f3",
+        "#0052cd",
+        "#0031ac",
+        "#a002fa",
+        "#ffc4ee",
+    ],
+    labels=[
+        "None",
+        "1 Day",
+        "2 Days",
+        "3 Days",
+        "4 Days",
+        "5 Days",
+        "6 Days",
+        "7 Days",
+        "8 Days",
+        "9 Days",
+        "10 Days",
+        "> 10 Days",
+    ],
+)
+
+xnhie_12_0_14 = HDCDiscreteRamp(
+    values=[
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        12,
+        14,
+        INF,
+    ],
+    colors=[
+        "#fafafa",
+        "#d3f9d0",
+        "#a9e4a3",
+        "#5eab91",
+        "#9fffe8",
+        "#90e0ef",
+        "#00b1de",
+        "#0083f3",
+        "#0052cd",
+        "#0031ac",
+        "#a002fa",
+        "#ffc4ee",
+    ],
+    labels=[
+        "None",
+        "1 Day",
+        "2 Days",
+        "3 Days",
+        "4 Days",
+        "5 Days",
+        "6 Days",
+        "7-8 Days",
+        "9-10 Days",
+        "11-12 Days",
+        "13-14 Days",
+        "> 14 Days",
+    ],
+)
+
+
+dlx_13_0_26 = HDCDiscreteRamp(
+    values=[
+        0,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        23,
+        INF,
+    ],
+    colors=[
+        "#6c9fa4",
+        "#57bec1",
+        "#aee0c4",
+        "#dcf1b2",
+        "#ffffbf",
+        "#ffeebd",
+        "#ffec81",
+        "#fed380",
+        "#fec754",
+        "#f5af28",
+        "#d79b0b",
+        "#c98a4b",
+        "#aa5a00",
+    ],
+    labels=[
+        "None",
+        "1-4 Days",
+        "5-6 Days",
+        "7-8 Days",
+        "9-10 Days",
+        "11-12 Days",
+        "13-14 Days",
+        "15-16 Days",
+        "17-18 Days",
+        "19-20 Days",
+        "21-22 Days",
+        "23-26 Days",
+        "> 26 Days",
+    ],
+)
+
+dlx_13_0_40 = HDCDiscreteRamp(
+    values=[
+        0,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21,
+        24,
+        27,
+        30,
+        35,
+        40,
+        INF,
+    ],
+    colors=[
+        "#6c9fa4",
+        "#57bec1",
+        "#aee0c4",
+        "#dcf1b2",
+        "#ffffbf",
+        "#ffeebd",
+        "#ffec81",
+        "#fed380",
+        "#fec754",
+        "#f5af28",
+        "#d79b0b",
+        "#c98a4b",
+        "#aa5a00",
+    ],
+    labels=[
+        "None",
+        "1-6 Days",
+        "7-9 Days",
+        "10-12 Days",
+        "13-15 Days",
+        "16-18 Days",
+        "19-21 Days",
+        "22-24 Days",
+        "25-27 Days",
+        "28-30 Days",
+        "31-35 Days",
+        "36-40 Days",
+        "> 40 Days",
     ],
 )
