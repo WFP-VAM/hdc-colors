@@ -1,7 +1,7 @@
 """HDC colors containers"""
-from typing import List
+from typing import List, cast
 
-from .types import ColorRampElement, RampInput
+from .types import ColorRampElement, RampInput, RampInput3
 from .utils import lagiter
 
 
@@ -12,28 +12,33 @@ class HDCBaseClass:
         self,
         ramp_input: RampInput,
     ):
-        if not self._validate_input(ramp_input):
-            raise ValueError(
-                "Number of colors must have equal number of values and labels (if provided)!"
-            )
-        values, colors, *labels = zip(*ramp_input)
-        if labels:
-            (labels,) = labels
+        tuple_sz = self._validate_input(ramp_input)  # raises ValueError
 
-        assert len(values) == len(colors)
+        values = [v for v, *_ in ramp_input]
+        colors = [c for _, c, *_ in ramp_input]
+        labels = (
+            None
+            if tuple_sz != 3
+            else [lbl for _, _, lbl in cast(RampInput3, ramp_input)]
+        )
+
         self.n = len(values)
-        if labels:
-            assert len(labels) == self.n
-
         self.vals = values
         self.cols = colors
         self.labels = labels
 
     @staticmethod
-    def _validate_input(list_in: RampInput) -> bool:
+    def _validate_input(list_in: RampInput) -> int:
         """Checks if tuples in List have all same length"""
-        xx = [len(x) for x in list_in]
-        return xx.count(xx[0]) == len(xx)
+        xx = set(len(x) for x in list_in)
+        if len(xx) != 1:
+            raise ValueError("Must supply labels for all values or not at all!")
+        (n,) = xx
+        if n not in (2, 3):
+            raise ValueError(
+                "Expect data in [(value, color), ...] or [(value, color, label), ...] format"
+            )
+        return n
 
 
 class HDCDiscreteRamp(HDCBaseClass):
@@ -46,12 +51,12 @@ class HDCDiscreteRamp(HDCBaseClass):
             {"value": value, "color": color, "label": label} if
         labels are provided."""
 
-        if self.labels:
-            return [
-                {"value": v, "color": c, "label": l}
-                for v, c, l in zip(self.vals, self.cols, self.labels)
-            ]
-        return [{"value": v, "color": c} for v, c in zip(self.vals, self.cols)]
+        if self.labels is None:
+            return [{"value": v, "color": c} for v, c in zip(self.vals, self.cols)]
+        return [
+            {"value": v, "color": c, "label": l}
+            for v, c, l in zip(self.vals, self.cols, self.labels)
+        ]
 
     @property
     def ramp_ows(self):

@@ -11,7 +11,7 @@ def class_input():
 
 
 def test_hdc_base(class_input):
-    vals, cols, labels = zip(*class_input)
+    vals, cols, labels = map(list, zip(*class_input))
 
     with pytest.raises(ValueError):
         _ = HDCBaseClass(
@@ -25,14 +25,26 @@ def test_hdc_base(class_input):
 
 
 # pylint: disable=protected-access
-def test_hdc_base_input_validation():
-    assert HDCBaseClass._validate_input([(1, 2, 3), (4, 5, 6), (7, 8, 9)])
-    assert HDCBaseClass._validate_input([(1, 2, 3), (4,), (7, 8)]) is False
-    assert HDCBaseClass._validate_input([(1, 2, 3), (4, 5, 6, 7, 8), (9,)]) is False
+@pytest.mark.parametrize(
+    "xx, n",
+    [
+        ([(1, 2, 3), (4, 5, 6), (7, 8, 9)], 3),
+        ([(1, 2), (4, 5), (7, 8)], 2),
+        ([(1, 2, 3), (7, 8)], -1),
+        ([(1,), (2,), (3,)], -1),
+        ([(1, 2, 3, 4), (4, 5, 6, 7)], -1),
+    ],
+)
+def test_hdc_base_input_validation(xx, n):
+    if n > 0:
+        assert HDCBaseClass._validate_input(xx) == n
+    else:
+        with pytest.raises(ValueError):
+            HDCBaseClass._validate_input(xx)
 
 
 def test_hdc_discrete(class_input):
-    vals, cols, _ = zip(*class_input)
+    vals, cols, _ = map(list, zip(*class_input))
     r = HDCDiscreteRamp(list(zip(vals, cols)))
     assert r.vals == vals
     assert r.cols == cols
