@@ -1,7 +1,7 @@
 """HDC colors containers"""
-from typing import List, Optional, Union
+from typing import List, cast
 
-from .types import ColorRampElement
+from .types import ColorRampElement, RampInput, RampInput3
 from .utils import lagiter
 
 
@@ -10,20 +10,35 @@ class HDCBaseClass:
 
     def __init__(
         self,
-        values: List[Union[int, float]],
-        colors: List[str],
-        labels: Optional[List[str]] = None,
+        ramp_input: RampInput,
     ):
-        if len(values) != len(colors):
-            raise ValueError("Number of colors must have equal number of values!")
+        tuple_sz = self._validate_input(ramp_input)  # raises ValueError
+
+        values = [v for v, *_ in ramp_input]
+        colors = [c for _, c, *_ in ramp_input]
+        labels = (
+            None
+            if tuple_sz != 3
+            else [lbl for _, _, lbl in cast(RampInput3, ramp_input)]
+        )
 
         self.n = len(values)
-        if (labels is not None) and (len(labels) != self.n):
-            raise ValueError("Provided lables must have equal number of values!")
-
         self.vals = values
         self.cols = colors
         self.labels = labels
+
+    @staticmethod
+    def _validate_input(list_in: RampInput) -> int:
+        """Checks if tuples in List have all same length"""
+        xx = set(len(x) for x in list_in)
+        if len(xx) != 1:
+            raise ValueError("Must supply labels for all values or not at all!")
+        (n,) = xx
+        if n not in (2, 3):
+            raise ValueError(
+                "Expect data in [(value, color), ...] or [(value, color, label), ...] format"
+            )
+        return n
 
 
 class HDCDiscreteRamp(HDCBaseClass):
