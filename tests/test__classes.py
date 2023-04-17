@@ -5,11 +5,6 @@ import pytest
 from hdc.colors._classes import HDCBaseClass, HDCDiscreteRamp
 
 
-@pytest.fixture
-def class_input():
-    return [(1, "red", "foo"), (2, "green", "bar"), (3, "blue", "biz")]
-
-
 def test_hdc_base(class_input):
     vals, cols, labels = map(list, zip(*class_input))
 
@@ -56,17 +51,19 @@ def test_hdc_discrete(class_input):
 
     r = HDCDiscreteRamp(class_input)
     assert r.ramp == [
-        {"value": 1, "color": "red", "label": "foo"},
-        {"value": 2, "color": "green", "label": "bar"},
-        {"value": 3, "color": "blue", "label": "biz"},
+        {"value": 1, "color": "#FF0000", "label": "foo"},
+        {"value": 2, "color": "#00FF00", "label": "bar"},
+        {"value": 3, "color": "#0000FF", "label": "biz"},
     ]
 
-    r = HDCDiscreteRamp(list(zip(list(vals) + [float("INF")], list(cols) + ["yellow"])))
+    r = HDCDiscreteRamp(
+        list(zip(list(vals) + [float("INF")], list(cols) + ["#FFFF00"]))
+    )
     assert r.ramp_ows == [
         {"value": vals[0], "color": cols[0]},
         {"value": vals[1], "color": cols[1]},
         {"value": vals[1], "color": cols[1]},
         {"value": vals[2], "color": cols[2]},
         {"value": vals[2], "color": cols[2]},
-        {"value": vals[2] + 1, "color": "yellow"},
+        {"value": vals[2] + 1, "color": "#FFFF00"},
     ]
