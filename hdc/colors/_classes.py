@@ -1,8 +1,8 @@
 """HDC colors containers"""
-from typing import List, cast
+from typing import cast, List, Optional
 
 from .types import ColorRampElement, RampInput, RampInput3
-from .utils import lagiter
+from .utils import create_color_table, lagiter
 
 
 class HDCBaseClass:
@@ -77,3 +77,7 @@ class HDCDiscreteRamp(HDCBaseClass):
 
             ramp.extend([{"value": vp + 1, "color": c}, {"value": v, "color": c}])
         return ramp
+
+    def to_txt(self, filename: Optional[str] = None):
+        """Create gdal compliant color table"""
+        return create_color_table(self, filename)
