@@ -3,7 +3,7 @@ from itertools import tee, chain
 from typing import cast, Iterable, Optional
 from pathlib import Path
 
-from .types import RGBTuple
+from .types import NodataType, RGBTuple
 
 INF = float("INF")
 
@@ -23,15 +23,22 @@ def hex_to_rgb(x: str) -> RGBTuple:
     return cast(RGBTuple, rgb_tuple)
 
 
-def create_color_table(ramp, filename: Optional[str] = None) -> str:
+def create_color_table(
+    ramp, nodata: Optional[NodataType] = None, filename: Optional[str] = None
+) -> str:
     """Create gdal compliant color table from color ramp"""
-    # pylint: disable=import-outside-toplevel
-    ctable = ""
+    # initialize table with nodata or empty
+    ctable = "" if nodata is None else f"{nodata} 255 255 255 0\n"
 
     for e in ramp.ramp_ows:
         v = e.get("value")
         c = e.get("color")
-        ctable += " ".join((str(v), *map(str, hex_to_rgb(c)))) + "\n"
+
+        row = [str(v), *map(str, hex_to_rgb(c))]
+
+        if nodata is not None:
+            row.append("255")
+        ctable += " ".join(row) + "\n"
 
     if filename is not None:
         if not filename.endswith(".txt"):
