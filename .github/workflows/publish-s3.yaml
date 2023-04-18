@@ -29,7 +29,8 @@ jobs:
 
       - name: upload wheels to S3
         run: |
-          aws s3 sync wheels/ ${S3_DEST}/
+          aws s3 sync wheels/dev/ ${S3_DEST}/
+          aws s3 sync wheels/clean/ ${S3_DEST}/
 
           # re-render index.html
           aws s3 ls ${S3_DEST}/ | ./scripts/render-simple-index.awk > wheels/index.html
