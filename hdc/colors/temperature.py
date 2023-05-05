@@ -3,6 +3,13 @@
 from ._classes import HDCDiscreteRamp
 from .utils import INF
 
+__all__ = [
+    "lst_42_m24_70",
+    "tdd_tnd_21_m20_20",
+    "tdd_tnd_21_m12_12",
+    "taa_21_1_48",
+]
+
 ### LST (in scaled kelvin)
 
 lst_42_m24_70 = HDCDiscreteRamp(
