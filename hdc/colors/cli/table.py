@@ -32,7 +32,7 @@ def cli(ctx, cli_help):
 
 @cli.command()
 @click.pass_context
-@click.option("--filter", "ramp_filter", type=click.STRING, multiple=True)
+@click.option("--filter", "-f", "ramp_filter", type=click.STRING, multiple=True)
 def rainfall(ctx, ramp_filter):
     """Show rainfall ramps table"""
     console = ctx.obj.get("console")
@@ -42,7 +42,7 @@ def rainfall(ctx, ramp_filter):
 
 @cli.command()
 @click.pass_context
-@click.option("--filter", "ramp_filter", type=click.STRING, multiple=True)
+@click.option("--filter", "-f", "ramp_filter", type=click.STRING, multiple=True)
 def vegetation(ctx, ramp_filter):
     """Show vegetation ramps table"""
     console = ctx.obj.get("console")
@@ -52,7 +52,7 @@ def vegetation(ctx, ramp_filter):
 
 @cli.command()
 @click.pass_context
-@click.option("--filter", "ramp_filter", type=click.STRING, multiple=True)
+@click.option("--filter", "-f", "ramp_filter", type=click.STRING, multiple=True)
 def temperature(ctx, ramp_filter):
     """Show temperature ramps table"""
     console = ctx.obj.get("console")
