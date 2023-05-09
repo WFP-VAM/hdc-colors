@@ -28,6 +28,8 @@ def create_table(name: str, color_ramp: HDCDiscreteRamp) -> Table:
 
     for entry in color_ramp.ramp:
         value, color, label = entry.values()
+        assert isinstance(label, str)
+        assert isinstance(color, str)
         assert color.startswith("#")
         bg_style = Style(color="black", bgcolor=color)
         table.add_row(str(value), Text("", style=bg_style), label)

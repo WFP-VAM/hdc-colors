@@ -170,7 +170,8 @@ jobs:
       - name: Check with mypy
         shell: bash
         run: |
-          mypy hdc
+          mypy --version
+          mypy --explicit-package-bases hdc
 
   test-with-coverage:
     runs-on: ubuntu-latest
