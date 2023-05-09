@@ -1,5 +1,6 @@
 # pylint: disable=missing-function-docstring,redefined-outer-name
 """Tests for hdc.colors._classes"""
+from matplotlib.colors import ListedColormap
 import pytest
 
 from hdc.colors._classes import HDCBaseClass, HDCDiscreteRamp
@@ -17,6 +18,9 @@ def test_hdc_base(class_input):
     assert r.vals == vals
     assert r.cols == cols
     assert r.labels == labels
+
+    assert isinstance(r.cmap, ListedColormap)
+    assert r.cmap.N == len(r.cols)
 
 
 # pylint: disable=protected-access

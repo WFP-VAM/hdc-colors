@@ -1,8 +1,10 @@
 """HDC colors containers"""
 from typing import cast, List, Optional
 
+from matplotlib.colors import ListedColormap
+
 from .types import ColorRampElement, NodataType, RampInput, RampInput3
-from .utils import create_color_table, lagiter
+from .utils import create_color_table, hex_to_rgb, lagiter
 
 
 class HDCBaseClass:
@@ -39,6 +41,15 @@ class HDCBaseClass:
                 "Expect data in [(value, color), ...] or [(value, color, label), ...] format"
             )
         return n
+
+    @property
+    def cmap(self) -> ListedColormap:
+        """ramp colors as matplotlib listed colormap"""
+        return ListedColormap([hex_to_rgb(x, True) for x in self.cols], "")
+
+    def _repr_png_(self):
+        # pylint: disable=protected-access
+        return self.cmap._repr_png_()
 
 
 class HDCDiscreteRamp(HDCBaseClass):
