@@ -2,6 +2,11 @@
 from ._classes import HDCDiscreteRamp
 from .utils import INF
 
+__all__ = [
+    "vim_14_01_09",
+    "viq_13_50_150",
+]
+
 ### NDVI (scaled by 10_000)
 
 vim_14_01_09 = HDCDiscreteRamp(

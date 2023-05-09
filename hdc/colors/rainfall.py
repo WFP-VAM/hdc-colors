@@ -5,6 +5,25 @@ from .utils import INF
 
 ### Rainfall (aggregations)
 
+__all__ = [
+    "rfh_16_0_300",
+    "rfh_16_0_400",
+    "rfh_16_0_600",
+    "rfh_16_0_800",
+    "rfh_16_0_1000",
+    "rfh_16_0_1600",
+    "rfh_16_0_2000",
+    "rfh_16_0_2400",
+    "rfh_16_0_4000",
+    "rfq_14_20_400",
+    "ryq_14_50_200",
+    "rxs",
+    "xlhie_12_0_10",
+    "xnhie_12_0_14",
+    "dlx_13_0_26",
+    "dlx_13_0_40",
+]
+
 rfh_16_0_300 = HDCDiscreteRamp(
     [
         (0, "#fafafa", "0 mm"),
