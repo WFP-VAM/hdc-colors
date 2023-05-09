@@ -1,12 +1,20 @@
 """hdc-colors-table script"""
 import click
+from click.core import Context
 from rich.console import Console
 from hdc.colors.ui import (
+    color_warning,
     create_overview_table,
     generate_rainfall_tables,
     generate_vegetation_tables,
     generate_temperature_tables,
 )
+
+
+def maybe_emit_color_warning(ctx: Context):
+    """Emit warning for low colors"""
+    if ctx.obj["low_colors"]:
+        ctx.obj["console"].print(color_warning())
 
 
 @click.group(invoke_without_command=True)
@@ -28,6 +36,9 @@ def cli(ctx, cli_help):
         ctx.exit()
 
     ctx.obj["console"] = console
+    ctx.obj["low_colors"] = console.color_system in ("standard", "256")
+
+    maybe_emit_color_warning(ctx)
 
 
 @cli.command()
@@ -39,6 +50,8 @@ def rainfall(ctx, ramp_filter):
     for t in generate_rainfall_tables(ramp_filter):
         console.print(t)
 
+    maybe_emit_color_warning(ctx)
+
 
 @cli.command()
 @click.pass_context
@@ -49,6 +62,8 @@ def vegetation(ctx, ramp_filter):
     for t in generate_vegetation_tables(ramp_filter):
         console.print(t)
 
+    maybe_emit_color_warning(ctx)
+
 
 @cli.command()
 @click.pass_context
@@ -58,6 +73,8 @@ def temperature(ctx, ramp_filter):
     console = ctx.obj.get("console")
     for t in generate_temperature_tables(ramp_filter):
         console.print(t)
+
+    maybe_emit_color_warning(ctx)
 
 
 if __name__ == "__main__":
