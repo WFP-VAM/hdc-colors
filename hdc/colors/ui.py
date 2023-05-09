@@ -104,3 +104,17 @@ def generate_temperature_tables(
 ) -> Iterator[Table]:
     """Generate temperature ramp tables"""
     yield from _table_gen(".temperature", temperature_ramps, ramp_filter)
+
+
+def color_warning() -> Rule:
+    """Create warning for low color console"""
+    warning_msg = Rule(
+        Text(
+            "WARNING: Colors might not be represented accurately on low color mode consoles!",
+            style=Style(color="bright_magenta", bold=True),
+        ),
+        characters="*",
+        style=Style(color="bright_red", bold=True),
+    )
+
+    return warning_msg
