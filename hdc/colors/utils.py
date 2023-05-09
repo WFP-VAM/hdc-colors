@@ -15,11 +15,17 @@ def lagiter(some_iterable: Iterable) -> Iterable:
     return zip(prevs, items)
 
 
-def hex_to_rgb(x: str) -> RGBTuple:
+def hex_to_rgb(x: str, normalize: bool = False) -> RGBTuple:
     "convert HEX string to RGB tuple"
+
+    def _maybe_norm(x):
+        return x / 255 if normalize else x
+
     assert x.startswith("#")
     x = x.lstrip("#")
-    rgb_tuple = tuple((int(x[ix : ix + 2], 16) for ix in (0, 2, 4)))
+    rgb_tuple = tuple(
+        _maybe_norm(int(x[ix : ix + 2], 16)) for ix in (0, 2, 4)
+    )
     return cast(RGBTuple, rgb_tuple)
 
 
