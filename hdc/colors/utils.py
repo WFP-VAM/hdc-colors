@@ -23,9 +23,7 @@ def hex_to_rgb(x: str, normalize: bool = False) -> RGBTuple:
 
     assert x.startswith("#")
     x = x.lstrip("#")
-    rgb_tuple = tuple(
-        _maybe_norm(int(x[ix : ix + 2], 16)) for ix in (0, 2, 4)
-    )
+    rgb_tuple = tuple(_maybe_norm(int(x[ix : ix + 2], 16)) for ix in (0, 2, 4))
     return cast(RGBTuple, rgb_tuple)
 
 

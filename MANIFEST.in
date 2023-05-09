@@ -3,3 +3,4 @@ exclude dev-env.yml
 
 prune .github/
 prune .gitignore
+prune img/
