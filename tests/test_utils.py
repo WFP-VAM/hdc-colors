@@ -35,11 +35,17 @@ def test_lagiter():
 
 
 @pytest.mark.parametrize(
-    "hex_val, rgb_val",
-    [("#fafafa", (250, 250, 250)), ("#ff0000", (255, 0, 0)), ("#000000", (0, 0, 0))],
+    "hex_val, rgb_val, norm",
+    [
+        ("#fafafa", (250, 250, 250), False),
+        ("#ff0000", (255, 0, 0), False),
+        ("#000000", (0, 0, 0), False),
+        ("#fafafa", (0.9803921568627451, 0.9803921568627451, 0.9803921568627451), True),
+        ("#ff0000", (1.0, 0.0, 0.0), True),
+    ],
 )
-def test_hex_to_rgb(hex_val, rgb_val):
-    assert hex_to_rgb(hex_val) == rgb_val
+def test_hex_to_rgb(hex_val, rgb_val, norm):
+    assert hex_to_rgb(hex_val, norm) == rgb_val
 
 
 @pytest.mark.parametrize(

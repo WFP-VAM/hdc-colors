@@ -6,6 +6,7 @@ dependencies:
   - python =3.9
   - pip =20
   - rich
+  - matplotlib
 
   ## linting tools
   - autopep8
