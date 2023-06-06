@@ -1,0 +1,43 @@
+{% set name = "hdc-colors" %}
+{% set version = os.environ.get("VERSION", "0.1.1") %}
+{% set build = os.environ.get("BUILD", "0") %}
+
+source:
+  url: https://data.earthobservation.vam.wfp.org/pypi/{{ name }}/{{ name }}-{{ version }}.tar.gz
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
+  number: {{ build }}
+
+requirements:
+  host:
+    - python >=3.8
+    - pip
+    - matplotlib
+  run:
+    - python >=3.8
+    - matplotlib
+
+test:
+  imports:
+    - hdc.colors
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://github.com/WFP-VAM/hdc-colors/
+  summary:
+  license: MIT
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - valpesendorfer
+    - Kirill888
