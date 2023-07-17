@@ -1,7 +1,7 @@
 # Conda environment for development, includes linting and testing tools
 #
 #  > mamba env create -f dev-env.yml
-#  > conda activate hdc-automap
+#  > conda activate hdc-colors
 #  > pip install -e .
 #
 name: hdc-colors
@@ -14,7 +14,7 @@ dependencies:
   - click
 
   # tests and dev
-  ## to use from jupyter-lab: `python -m ipykernel install --user --name hdc-automap`
+  ## to use from jupyter-lab: `python -m ipykernel install --user --name hdc-colors`
   - ipykernel
 
   ## linting tools
