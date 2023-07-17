@@ -90,7 +90,7 @@ class HDCDiscreteRamp(HDCBaseClass):
         return ramp
 
     def to_txt(
-        self, nodata: Optional[NodataType] = None, filename: Optional[str] = None
+        self, filename: Optional[str] = None, nodata: Optional[NodataType] = None
     ):
         """Create gdal compliant color table"""
         return create_color_table(self, nodata=nodata, filename=filename)
