@@ -11,7 +11,7 @@ channels:
 dependencies:
   - python =3.9
   - rich
-  - click
+  - click >=1.8.6
 
   # tests and dev
   ## to use from jupyter-lab: `python -m ipykernel install --user --name hdc-colors`
