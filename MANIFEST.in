@@ -1,3 +1,7 @@
+include conda/recipe/meta.yaml
+include conda/build-env.yaml
+include conda/Makefile
+include conda/README.md
 exclude .gitignore
 exclude dev-env.yml
 

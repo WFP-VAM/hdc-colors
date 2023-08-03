@@ -1,9 +1,10 @@
 {% set name = "hdc-colors" %}
-{% set version = os.environ.get("VERSION", "0.1.1") %}
+{% set data = load_setup_py_data() %}
+{% set version = os.environ.get("VERSION", "") or data.get("version") %}
 {% set build = os.environ.get("BUILD", "0") %}
 
 source:
-  url: https://data.earthobservation.vam.wfp.org/pypi/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  path: ../..
 
 package:
   name: {{ name|lower }}
@@ -15,10 +16,10 @@ build:
   number: {{ build }}
 
 requirements:
-  host:
-    - python >=3.8
+  build:
     - pip
-    - matplotlib
+  host:
+    - python
   run:
     - python >=3.8
     - matplotlib
