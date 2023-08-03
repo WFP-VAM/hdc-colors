@@ -6,14 +6,15 @@ This repository contains the color-ramp sources for all* data from the Humanitar
 
 ```
 # mamba/conda
-mamba install -c https://data.earthobservation.vam.wfp.org/hdc/ hdc-colors
+mamba install -c wfp-ram hdc-colors
 
 # pip
 pip install --extra-index-url=https://data.earthobservation.vam.wfp.org/pypi/ hdc-colors
 
 ```
+
 > **Note**
-> 
+>
 >The main purpose of this repo is to contain the color source, keeping the dependencies minimal. To install all dependencies that might be required for users, please use extras install `hdc-colors[all]`.
 
 ### Available color ramps
@@ -29,6 +30,7 @@ To inspect the color ramps for a specific category, you can add the category nam
 ```python
 hdc-colors-table rainfall
 ```
+
 and all color ramps for the category will be visualized in the console.
 
 To look at one or more specific ramps, you can add one or more `--filer / -f` flags:
@@ -36,6 +38,7 @@ To look at one or more specific ramps, you can add one or more `--filer / -f` fl
 ```python
 hdc-colors-table rainfall -f rxs
 ```
+
 <div style="width: 100%;">
   <img src="img/hdc-colors-rxs.svg" style="width: 100%;" alt="hdc-colors rxs-ramp">
 </div>
@@ -63,6 +66,7 @@ plt.title("Ethiopia SPI-1 ending on the 31st of March, 2023")
 
 
 ```
+
 <div style="width: 100%;">
   <img src="img/ethr1s.svg" style="width: 100%;" alt="Plot example">
 </div>
