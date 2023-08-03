@@ -1,6 +1,6 @@
 {% set name = "hdc-colors" %}
 {% set data = load_setup_py_data() %}
-{% set version = os.environ.get("VERSION", "") or data.get("version") %}
+{% set version = os.environ.get("VERSION", "") or data.get("version").replace("-dev", ".dev") %}
 {% set build = os.environ.get("BUILD", "0") %}
 
 source:
