@@ -51,6 +51,14 @@ jobs:
           python setup.py sdist --dist-dir ./wheels/dev/
           find ./wheels/dev -type f
 
+      - name: Publish Artifacts 
+        uses: actions/upload-artifact@v3
+        with:
+          name: wheels 
+          path: wheels
+          if-no-files-found: error
+
+
   build-test-env-base:
     runs-on: ubuntu-latest
 
