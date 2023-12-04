@@ -3,10 +3,11 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import numpy as np
 import pytest
 
-from hdc.colors.utils import create_color_table, hex_to_rgb, lagiter
 from hdc.colors._classes import HDCDiscreteRamp
+from hdc.colors.utils import create_color_table, hex_to_rgb, lagiter
 
 
 @pytest.fixture
@@ -83,3 +84,74 @@ def test_create_color_table_file(class_input, desired):
         assert fo.exists()
         assert fo.read_text(encoding="utf-8") == desired
         fo.unlink()
+
+
+@pytest.mark.parametrize(
+    "cm",
+    [
+        HDCDiscreteRamp(
+            [
+                (0.000, "#ff1100"),
+                (10.00, "#ff2201"),
+                (211.0, "#ff3302"),
+                (300.0, "#ff4403"),
+            ]
+        )
+    ],
+)
+@pytest.mark.parametrize("out_of_range_color", ["#ffffff00", "#00000000"])
+def test_colorizer(cm: HDCDiscreteRamp, out_of_range_color: str):
+    colorize = cm.colorizer(out_of_range_color=out_of_range_color)
+    x = np.asarray(cm.vals)
+
+    def to_hex(xx):
+        return "#" + "".join(f"{x:02x}" for x in xx)
+
+    hex_palette = [c + "ff" for c in cm.cols] + [out_of_range_color]
+
+    rgba = colorize(x - 0.1)
+    assert rgba.shape == (*x.shape, 4)
+    assert rgba.dtype == "uint8"
+    for i in range(len(cm.vals)):
+        assert to_hex(rgba[i]) == hex_palette[i]
+
+    rgba = colorize(x)
+    assert rgba.shape == (*x.shape, 4)
+    assert rgba.dtype == "uint8"
+
+    for i, v in enumerate(cm.vals):
+        x = np.asarray([v - 0.1, v, v + 0.1])
+        yy = [to_hex(c) for c in colorize(x)]
+        assert yy == [hex_palette[i], hex_palette[i + 1], hex_palette[i + 1]]
+
+    assert to_hex(rgba[-1]) == out_of_range_color
+
+
+@pytest.mark.parametrize(
+    "cm",
+    [
+        HDCDiscreteRamp(
+            [
+                (0.000, "#ff1100"),
+                (10.00, "#ff2201"),
+                (211.0, "#ff3302"),
+                (300.0, "#ff4403"),
+            ]
+        )
+    ],
+)
+@pytest.mark.parametrize("out_of_range_color", ["#ffffff00", "#00000000"])
+def test_palettizer(cm: HDCDiscreteRamp, out_of_range_color: str):
+    to_bins, pallette = cm.palettizer(out_of_range_color=out_of_range_color)
+    assert len(pallette) == len(cm.cols) + 1
+    assert tuple(pallette[-1]) == hex_to_rgb(out_of_range_color)
+
+    x = np.asarray([*cm.vals, cm.vals[0] - 100])
+
+    ii = to_bins(x)
+    assert ii.shape == x.shape
+    assert ii.dtype == "uint8"
+
+    for i, v in enumerate(cm.vals):
+        x = np.asarray([v - 0.1, v, v + 0.1])
+        assert tuple(to_bins(x).tolist()) == (i, i + 1, i + 1)
