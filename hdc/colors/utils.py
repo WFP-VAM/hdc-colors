@@ -1,9 +1,9 @@
 """HDC colors utils"""
-from itertools import tee, chain
-from typing import cast, Iterable, Optional
+from itertools import chain, tee
 from pathlib import Path
+from typing import Iterable, Optional, Union
 
-from .types import NodataType, RGBTuple
+from .types import NodataType, RGBATuple, RGBTuple
 
 INF = float("INF")
 
@@ -15,7 +15,10 @@ def lagiter(some_iterable: Iterable) -> Iterable:
     return zip(prevs, items)
 
 
-def hex_to_rgb(x: str, normalize: bool = False) -> RGBTuple:
+def hex_to_rgb(
+    x: str,
+    normalize: bool = False,
+) -> Union[RGBTuple, RGBATuple]:
     "convert HEX string to RGB tuple"
 
     def _maybe_norm(x):
@@ -23,8 +26,11 @@ def hex_to_rgb(x: str, normalize: bool = False) -> RGBTuple:
 
     assert x.startswith("#")
     x = x.lstrip("#")
-    rgb_tuple = tuple(_maybe_norm(int(x[ix : ix + 2], 16)) for ix in (0, 2, 4))
-    return cast(RGBTuple, rgb_tuple)
+    parts = [_maybe_norm(int(x[i : i + 2], 16)) for i in range(0, len(x), 2)]
+    r, g, b, *a = parts
+    if len(a):
+        return r, g, b, a[0]
+    return (r, g, b)
 
 
 def create_color_table(
