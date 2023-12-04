@@ -9,9 +9,10 @@ channels:
   - conda-forge
 
 dependencies:
-  - python =3.9
+  - python =3.10
   - rich
   - click >=1.8.6
+  - matplotlib
 
   # tests and dev
   ## to use from jupyter-lab: `python -m ipykernel install --user --name hdc-colors`
