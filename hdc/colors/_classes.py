@@ -1,6 +1,8 @@
 """HDC colors containers"""
-from typing import cast, List, Optional
+import functools
+from typing import Callable, List, Optional, Tuple, cast
 
+import numpy as np
 from matplotlib.colors import ListedColormap
 
 from .types import ColorRampElement, NodataType, RampInput, RampInput3
@@ -51,6 +53,38 @@ class HDCBaseClass:
         # pylint: disable=protected-access
         return self.cmap._repr_png_()
 
+    def _extract_palette(
+        self, out_of_range_color: str = "#00000000"
+    ) -> Tuple[np.ndarray, np.ndarray]:
+        palette = np.asarray(
+            [hex_to_rgb((c + "ff")[:9]) for c in [*self.cols, out_of_range_color]],
+            dtype="uint8",
+        )
+        bins = np.asarray(self.vals)
+        return palette, bins
+
+    def colorizer(
+        self,
+        out_of_range_color: str = "#00000000",
+    ) -> Callable[[np.ndarray], np.ndarray]:
+        """Create colorizer operator.
+
+        Maps single channel images to rgba according to colormap.
+        """
+        palette, bins = self._extract_palette(out_of_range_color)
+        return functools.partial(_apply_palette, palette, bins)
+
+    def palettizer(
+        self,
+        out_of_range_color: str = "#00000000",
+    ) -> Tuple[Callable[[np.ndarray], np.ndarray], np.ndarray]:
+        """Create colorizer operator.
+
+        Maps single channel images to palette indexes.
+        """
+        palette, bins = self._extract_palette(out_of_range_color)
+        return functools.partial(_digitize, bins, dtype=np.uint8), palette
+
 
 class HDCDiscreteRamp(HDCBaseClass):
     """Discrete HDC color ramp"""
@@ -94,3 +128,14 @@ class HDCDiscreteRamp(HDCBaseClass):
     ):
         """Create gdal compliant color table"""
         return create_color_table(self, nodata=nodata, filename=filename)
+
+
+def _apply_palette(palette, bins, x, nodata=None):
+    return palette[_digitize(bins, x, dtype="int32", nodata=nodata)]
+
+
+def _digitize(bins, x, dtype="uint8", nodata=None):
+    binned = np.digitize(x, bins).astype(dtype)
+    if nodata is not None:
+        binned[x == nodata] = len(bins)
+    return binned
