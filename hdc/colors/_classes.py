@@ -1,4 +1,5 @@
 """HDC colors containers"""
+
 import functools
 from typing import Callable, List, Optional, Tuple, cast
 

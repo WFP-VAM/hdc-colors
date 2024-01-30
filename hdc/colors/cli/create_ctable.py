@@ -1,4 +1,5 @@
 """hdc-colors-create-ctable script"""
+
 import click
 
 import hdc.colors.rainfall as rainfall_ramps

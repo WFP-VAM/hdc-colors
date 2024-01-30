@@ -1,4 +1,5 @@
 """Visualization stuff for UI"""
+
 import importlib
 from typing import Iterator, List, Optional, Tuple
 

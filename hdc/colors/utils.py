@@ -1,4 +1,5 @@
 """HDC colors utils"""
+
 from itertools import chain, tee
 from pathlib import Path
 from typing import Iterable, Optional, Union
