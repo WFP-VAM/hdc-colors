@@ -1,4 +1,5 @@
 """hdc-colors-table script"""
+
 import click
 from click.core import Context
 from rich.console import Console

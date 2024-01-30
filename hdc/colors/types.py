@@ -1,4 +1,5 @@
 """Custom types for hdc-colors"""
+
 from typing import Dict, List, Tuple, Union
 
 ColorRampElement = Dict[str, Union[Union[int, float], str]]

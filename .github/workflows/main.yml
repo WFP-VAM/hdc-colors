@@ -125,7 +125,8 @@ jobs:
       - name: Check formatting (black)
         shell: bash
         run: |
-          black --check .
+          black --version
+          black --check --diff .
 
   run-pylint:
     runs-on: ubuntu-latest
