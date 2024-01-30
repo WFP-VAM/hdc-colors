@@ -22,7 +22,7 @@ requirements:
     - python
   run:
     - python >=3.8
-    - matplotlib
+    - matplotlib-inline
 
 test:
   imports:
