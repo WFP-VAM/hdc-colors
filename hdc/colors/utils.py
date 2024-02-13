@@ -2,9 +2,9 @@
 
 from itertools import chain, tee
 from pathlib import Path
-from typing import Iterable, Optional, Union
+from typing import Iterable, Optional, Sequence, Union
 
-from .types import NodataType, RGBATuple, RGBTuple
+from .types import NodataType, RGBATuple, RGBTuple, SomeNumber
 
 INF = float("INF")
 
@@ -32,6 +32,17 @@ def hex_to_rgb(
     if len(a):
         return r, g, b, a[0]
     return (r, g, b)
+
+
+def rgb_to_hex(c: Sequence[SomeNumber], normalize: bool = False) -> str:
+    """convert RGB tuple to HEX string"""
+    assert len(c) in (3, 4)
+    if normalize:
+        c = [int(x * 255) for x in c]
+    else:
+        c = [int(x) for x in c]
+
+    return "#" + "".join(f"{x:02x}" for x in c)
 
 
 def create_color_table(

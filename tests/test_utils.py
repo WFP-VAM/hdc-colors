@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 
 from hdc.colors._classes import HDCDiscreteRamp
-from hdc.colors.utils import create_color_table, hex_to_rgb, lagiter
+from hdc.colors.utils import create_color_table, hex_to_rgb, rgb_to_hex, lagiter
 
 
 @pytest.fixture
@@ -53,6 +53,7 @@ def test_lagiter():
 )
 def test_hex_to_rgb(hex_val, rgb_val, norm):
     assert hex_to_rgb(hex_val, norm) == rgb_val
+    assert rgb_to_hex(rgb_val, norm) == hex_val
 
 
 @pytest.mark.parametrize(

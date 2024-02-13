@@ -1,12 +1,12 @@
 """HDC colors containers"""
 
 import functools
-from typing import Callable, List, Optional, Tuple, cast
+from typing import Callable, List, Optional, Sequence, Tuple, cast
 
 import numpy as np
 from matplotlib.colors import ListedColormap
 
-from .types import ColorRampElement, NodataType, RampInput, RampInput3
+from .types import ColorRampElement, NodataType, RampInput, RampInput3, SomeNumber
 from .utils import create_color_table, hex_to_rgb, lagiter
 
 
@@ -85,6 +85,38 @@ class HDCBaseClass:
         """
         palette, bins = self._extract_palette(out_of_range_color)
         return functools.partial(_digitize, bins, dtype=np.uint8), palette
+
+    def resample(self, edges: List[SomeNumber]) -> "HDCBaseClass":
+        """
+        Resample color ramp to new edges.
+
+        Same colors should be produced on the output, but number of discrete
+        bins changes. This is useful for computing bin-compatible color ramps
+        from a set of several.
+
+        Args:
+            edges (np.ndarray): new bin edges
+        """
+        to_bins, _ = self.palettizer()
+        _edges = np.asarray(edges)
+        # repeat last color to handle INF
+        cols = np.asarray([*self.cols, self.cols[-1]])
+        new_cols: List[str] = cols[to_bins(_edges - 0.001)].tolist()
+        return type(self)(list(zip(edges, new_cols)))
+
+    @staticmethod
+    def unify(ramps: Sequence["HDCBaseClass"]) -> List["HDCBaseClass"]:
+        """Unify color ramps to common bin edges"""
+        if len(ramps) == 0:
+            return []
+        if len(ramps) == 1:
+            return [ramps[0]]
+
+        edges = set()
+        for r in ramps:
+            edges.update(r.vals)
+        edges = sorted(edges)
+        return [r.resample(edges) for r in ramps]
 
 
 class HDCDiscreteRamp(HDCBaseClass):
