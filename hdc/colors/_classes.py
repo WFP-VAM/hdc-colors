@@ -1,10 +1,9 @@
 """HDC colors containers"""
 
 import functools
-from typing import Callable, List, Optional, Sequence, Tuple, cast
+from typing import TYPE_CHECKING, Callable, List, Optional, Sequence, Tuple, cast
 
 import numpy as np
-from matplotlib.colors import ListedColormap
 
 from .types import ColorRampElement, NodataType, RampInput, RampInput3, SomeNumber
 from .utils import create_color_table, hex_to_rgb, lagiter
@@ -46,8 +45,11 @@ class HDCBaseClass:
         return n
 
     @property
-    def cmap(self) -> ListedColormap:
+    def cmap(self) -> "matplotlib.colors.ListedColormap":
         """ramp colors as matplotlib listed colormap"""
+        # pylint: disable=import-outside-toplevel
+        from matplotlib.colors import ListedColormap
+
         return ListedColormap([hex_to_rgb(x, True) for x in self.cols], "")
 
     def _repr_png_(self):
@@ -172,3 +174,8 @@ def _digitize(bins, x, dtype="uint8", nodata=None):
     if nodata is not None:
         binned[x == nodata] = len(bins)
     return binned
+
+
+if TYPE_CHECKING:
+    # pylint: disable=wrong-import-position
+    import matplotlib.colors
