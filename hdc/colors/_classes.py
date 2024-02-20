@@ -1,6 +1,7 @@
 """HDC colors containers"""
 
 import functools
+import math
 from typing import TYPE_CHECKING, Callable, List, Optional, Sequence, Tuple, cast
 
 import numpy as np
@@ -59,11 +60,15 @@ class HDCBaseClass:
     def _extract_palette(
         self, out_of_range_color: str = "#00000000"
     ) -> Tuple[np.ndarray, np.ndarray]:
+        palette = [out_of_range_color, *self.cols]
+
+        if math.isfinite(self.vals[-1]):
+            palette.append(out_of_range_color)
+
+        bins = np.asarray([float("-inf"), *self.vals], dtype="float32")
         palette = np.asarray(
-            [hex_to_rgb((c + "ff")[:9]) for c in [*self.cols, out_of_range_color]],
-            dtype="uint8",
+            [hex_to_rgb((c + "ff")[:9]) for c in palette], dtype="uint8"
         )
-        bins = np.asarray(self.vals)
         return palette, bins
 
     def colorizer(
@@ -101,9 +106,7 @@ class HDCBaseClass:
         """
         to_bins, _ = self.palettizer()
         _edges = np.asarray(edges)
-        # repeat last color to handle INF
-        cols = np.asarray([*self.cols, self.cols[-1]])
-        new_cols: List[str] = cols[to_bins(_edges - 0.001)].tolist()
+        new_cols: List[str] = [self.cols[i - 1] for i in to_bins(_edges - 0.001)]
         return type(self)(list(zip(edges, new_cols)))
 
     @staticmethod
@@ -170,9 +173,14 @@ def _apply_palette(palette, bins, x, nodata=None):
 
 
 def _digitize(bins, x, dtype="uint8", nodata=None):
-    binned = np.digitize(x, bins).astype(dtype)
+    binned = np.digitize(x, bins, right=False).astype(dtype)
     if nodata is not None:
-        binned[x == nodata] = len(bins)
+        binned[x == nodata] = 0
+    dtype = getattr(x, "dtype", None)
+    if dtype and dtype.kind == "f":
+        inf_bin = len(bins) - 1 if math.isinf(bins[-1]) else 0
+        binned[np.isinf(x)] = inf_bin
+
     return binned
 
 
