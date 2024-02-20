@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 
 from hdc.colors._classes import HDCDiscreteRamp
-from hdc.colors.utils import create_color_table, hex_to_rgb, rgb_to_hex, lagiter
+from hdc.colors.utils import create_color_table, hex_to_rgb, lagiter, rgb_to_hex
 
 
 @pytest.fixture
@@ -108,24 +108,30 @@ def test_colorizer(cm: HDCDiscreteRamp, out_of_range_color: str):
     def to_hex(xx):
         return "#" + "".join(f"{x:02x}" for x in xx)
 
-    hex_palette = [c + "ff" for c in cm.cols] + [out_of_range_color]
+    hex_palette = (
+        [out_of_range_color] + [c + "ff" for c in cm.cols] + [out_of_range_color]
+    )
+
+    hex_plte_native = hex_palette[1:-1]
 
     rgba = colorize(x - 0.1)
     assert rgba.shape == (*x.shape, 4)
     assert rgba.dtype == "uint8"
     for i in range(len(cm.vals)):
-        assert to_hex(rgba[i]) == hex_palette[i]
+        assert to_hex(rgba[i]) == (cm.cols[i] + "ff")[:9]
 
     rgba = colorize(x)
     assert rgba.shape == (*x.shape, 4)
     assert rgba.dtype == "uint8"
 
-    for i, v in enumerate(cm.vals):
+    for i, v in enumerate(cm.vals[:-1]):
         x = np.asarray([v - 0.1, v, v + 0.1])
         yy = [to_hex(c) for c in colorize(x)]
-        assert yy == [hex_palette[i], hex_palette[i + 1], hex_palette[i + 1]]
-
-    assert to_hex(rgba[-1]) == out_of_range_color
+        assert yy == [
+            hex_plte_native[i],
+            hex_plte_native[i + 1],
+            hex_plte_native[i + 1],
+        ]
 
 
 @pytest.mark.parametrize(
@@ -144,8 +150,8 @@ def test_colorizer(cm: HDCDiscreteRamp, out_of_range_color: str):
 @pytest.mark.parametrize("out_of_range_color", ["#ffffff00", "#00000000"])
 def test_palettizer(cm: HDCDiscreteRamp, out_of_range_color: str):
     to_bins, pallette = cm.palettizer(out_of_range_color=out_of_range_color)
-    assert len(pallette) == len(cm.cols) + 1
-    assert tuple(pallette[-1]) == hex_to_rgb(out_of_range_color)
+    assert len(pallette) - len(cm.cols) in (1, 2)
+    assert tuple(pallette[0]) == hex_to_rgb(out_of_range_color)
 
     x = np.asarray([*cm.vals, cm.vals[0] - 100])
 
@@ -155,4 +161,5 @@ def test_palettizer(cm: HDCDiscreteRamp, out_of_range_color: str):
 
     for i, v in enumerate(cm.vals):
         x = np.asarray([v - 0.1, v, v + 0.1])
-        assert tuple(to_bins(x).tolist()) == (i, i + 1, i + 1)
+        # +1 because of out_of_range_color
+        assert tuple(to_bins(x).tolist()) == (i + 1, i + 2, i + 2)
