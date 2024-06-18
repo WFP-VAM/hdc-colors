@@ -5,11 +5,11 @@ from ._classes import HDCDiscreteRamp
 from .types import RampInput
 
 __all__ = [
-    "w6d_flood",
+    "w6dfwt",
 ]
 
-### w6d encoded flood trend
-w6d_flood = HDCDiscreteRamp(
+### w6d encoded flood wetland/trend
+w6dfwt = HDCDiscreteRamp(
     cast(
         RampInput,
         [
