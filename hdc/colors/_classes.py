@@ -173,7 +173,7 @@ def _apply_palette(palette, bins, x, nodata=None):
 
 
 def _digitize(bins, x, dtype="uint8", nodata=None):
-    binned = np.digitize(x, bins, right=False).astype(dtype)
+    binned = np.digitize(x, bins, right=True).astype(dtype)
     if nodata is not None:
         binned[x == nodata] = 0
     dtype = getattr(x, "dtype", None)
