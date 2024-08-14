@@ -13,9 +13,8 @@ pip install --extra-index-url=https://data.earthobservation.vam.wfp.org/pypi/ hd
 
 ```
 
-> **Note**
->
->The main purpose of this repo is to contain the color source, keeping the dependencies minimal. To install all dependencies that might be required for users, please use extras install `hdc-colors[all]`.
+> [!IMPORTANT]
+> The main purpose of this repo is to contain the color source, keeping the dependencies minimal. To install all dependencies that might be required for users, please use extras install `hdc-colors[all]`.
 
 ### Available color ramps
 To see a table with all available color ramps, check out the [rendered markdown](color_ramps.md)!  
@@ -45,6 +44,9 @@ hdc-colors-table rainfall -f rxs
 </div>
 
 ### Usage example
+
+> [!NOTE]
+> To run this example, you need the `matplotlib` package installed (comes with `hdc-colors[all]`)
 
 ```python
 import matplotib.pyplot as plt

@@ -49,7 +49,12 @@ class HDCBaseClass:
     def cmap(self) -> "matplotlib.colors.ListedColormap":
         """ramp colors as matplotlib listed colormap"""
         # pylint: disable=import-outside-toplevel
-        from matplotlib.colors import ListedColormap
+        try:
+            from matplotlib.colors import ListedColormap
+        except ImportError as ie:
+            raise ImportError(
+                "matplotlib is required for using the `.cmap` property"
+            ) from ie
 
         return ListedColormap([hex_to_rgb(x, True) for x in self.cols], "")
 
