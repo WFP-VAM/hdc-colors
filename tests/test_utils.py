@@ -1,5 +1,6 @@
 # pylint: disable=missing-function-docstring,redefined-outer-name
 """Tests for hdc.colors.utils"""
+
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -108,9 +109,7 @@ def test_colorizer(cm: HDCDiscreteRamp, out_of_range_color: str):
     def to_hex(xx):
         return "#" + "".join(f"{x:02x}" for x in xx)
 
-    hex_palette = (
-        [out_of_range_color] + [c + "ff" for c in cm.cols] + [out_of_range_color]
-    )
+    hex_palette = [out_of_range_color] + [c + "ff" for c in cm.cols] + [out_of_range_color]
 
     hex_plte_native = hex_palette[1:-1]
 

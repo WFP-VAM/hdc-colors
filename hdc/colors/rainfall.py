@@ -1,11 +1,14 @@
 # pylint: disable=duplicate-code
-"""Color ramps for rainfall data"""
+"""Color ramps for rainfall data."""
+
 from ._classes import HDCDiscreteRamp
 from .utils import INF
 
 ### Rainfall (aggregations)
 
 __all__ = [
+    "dlx_13_0_26",
+    "dlx_13_0_40",
     "rfh_13_0_120",
     "rfh_16_0_300",
     "rfh_16_0_400",
@@ -17,12 +20,10 @@ __all__ = [
     "rfh_16_0_2400",
     "rfh_16_0_4000",
     "rfq_14_20_400",
-    "ryq_14_50_200",
     "rxs",
+    "ryq_14_50_200",
     "xlhie_12_0_10",
     "xnhie_12_0_14",
-    "dlx_13_0_26",
-    "dlx_13_0_40",
 ]
 
 rfh_13_0_120 = HDCDiscreteRamp(

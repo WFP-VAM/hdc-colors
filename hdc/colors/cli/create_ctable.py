@@ -1,16 +1,17 @@
-"""hdc-colors-create-ctable script"""
+"""hdc-colors-create-ctable script."""
 
 import click
 
+import hdc.colors.hazards as hazards_ramps
 import hdc.colors.rainfall as rainfall_ramps
-import hdc.colors.vegetation as vegetation_ramps
 import hdc.colors.temperature as temperature_ramps
+import hdc.colors.vegetation as vegetation_ramps
 
-ALL_RAMPS = [rainfall_ramps, vegetation_ramps, temperature_ramps]
+ALL_RAMPS = [rainfall_ramps, vegetation_ramps, temperature_ramps, hazards_ramps]
 
 
 def get_ramp(ramp_name: str):
-    """get ramp"""
+    """Get ramp."""
     for ramp in ALL_RAMPS:
         for rr in ramp.__all__:
             if rr == ramp_name:
@@ -24,7 +25,7 @@ def get_ramp(ramp_name: str):
 @click.option("-f", "--file-name", type=str, help="output filename")
 @click.option("-n", "--nodata", type=(int, float), help="nodata value")
 def cli(ramp_name, write, file_name, nodata):
-    """hdc-colors-create-ctable entry point"""
+    """hdc-colors-create-ctable entry point."""
     ramp_name = ramp_name.lower()
     cramp = get_ramp(ramp_name)
 

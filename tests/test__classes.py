@@ -1,5 +1,6 @@
 # pylint: disable=missing-function-docstring,redefined-outer-name
 """Tests for hdc.colors._classes"""
+
 import math
 
 import numpy as np
@@ -14,9 +15,7 @@ def test_hdc_base(class_input):
     vals, cols, labels = map(list, zip(*class_input))
 
     with pytest.raises(ValueError):
-        _ = HDCBaseClass(
-            [(vals[0], cols[0], labels[0]), (vals[1], labels[1]), (vals[2], labels[2])]
-        )
+        _ = HDCBaseClass([(vals[0], cols[0], labels[0]), (vals[1], labels[1]), (vals[2], labels[2])])
 
     r = HDCBaseClass(class_input)
     assert r.vals == vals
@@ -64,9 +63,7 @@ def test_hdc_discrete(class_input):
         {"value": 3, "color": "#0000FF", "label": "biz"},
     ]
 
-    r = HDCDiscreteRamp(
-        list(zip(list(vals) + [float("INF")], list(cols) + ["#FFFF00"]))
-    )
+    r = HDCDiscreteRamp(list(zip([*list(vals), float("INF")], [*list(cols), "#FFFF00"])))
     assert r.ramp_ows == [
         {"value": vals[0], "color": cols[0]},
         {"value": vals[1], "color": cols[1]},
@@ -87,10 +84,8 @@ def test_resample_identity(cm):
 
 def test_cm_resample():
     _inf = float("inf")
-    cm = HDCDiscreteRamp(
-        [(10, "#FF0000"), (20, "#00FF00"), (30, "#0000FF"), (_inf, "#FFFF00")]
-    )
-    edges = sorted(list(range(0, 40, 5)) + [_inf])
+    cm = HDCDiscreteRamp([(10, "#FF0000"), (20, "#00FF00"), (30, "#0000FF"), (_inf, "#FFFF00")])
+    edges = sorted([*list(range(0, 40, 5)), _inf])
     assert set(edges).issuperset(cm.vals)
 
     _cm = cm.resample(edges)

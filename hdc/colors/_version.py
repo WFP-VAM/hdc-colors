@@ -1,3 +1,3 @@
-"""hdc-colors version"""
+"""hdc-colors version."""
 
 __version__ = "0.3.0"

@@ -83,6 +83,14 @@ ignore = [
     "PLR0912",  # Too many branches
     "PLR0913",  # Too many arguments
     "PLR0915",  # Too many statements
+    "PLC0415", # Import at the top-level
+]
+
+"hdc/colors/cli/table.py" = [
+    "PLR0915", # Too many statements (CLI function)
+]
+"hdc/colors/ui.py" = [
+    "PLR0915", # Too many statements (table generation functions)
 ]
 
 [tool.ruff.lint.pydocstyle]
