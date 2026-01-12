@@ -1,10 +1,12 @@
-"""Color ramps for hazards related data"""
+"""Color ramps for hazards related data."""
 
 from typing import cast
+
 from ._classes import HDCDiscreteRamp
 from .types import RampInput
 
 __all__ = [
+    "cdi",
     "w6dfwt",
 ]
 
@@ -30,6 +32,26 @@ w6dfwt = HDCDiscreteRamp(
             (103, "#7d7d7d", "103"),
             (104, "#a2a2a2", "104"),
             (105, "#c8c8c8", "105"),
+        ],
+    )
+)
+
+
+### CDI - Combined Drought Indicator
+cdi = HDCDiscreteRamp(
+    cast(
+        RampInput,
+        [
+            (1000, "#4d0000", "0.0 - 0.1"),
+            (2000, "#990000", "0.1 - 0.2"),
+            (3000, "#ff4500", "0.2 - 0.3"),
+            (4000, "#ff8c00", "0.3 - 0.4"),
+            (5000, "#ffd700", "0.4 - 0.5"),
+            (6000, "#ffff99", "0.5 - 0.6"),
+            (7000, "#66ccff", "0.6 - 0.7"),
+            (8000, "#3399ff", "0.7 - 0.8"),
+            (9000, "#0066cc", "0.8 - 0.9"),
+            (10000, "#003d7a", "0.9 - 1.0"),
         ],
     )
 )

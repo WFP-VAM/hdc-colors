@@ -1,8 +1,8 @@
-"""HDC colors utils"""
+"""HDC colors utils."""
 
+from collections.abc import Iterable, Sequence
 from itertools import chain, tee
 from pathlib import Path
-from typing import Iterable, Optional, Sequence, Union
 
 from .types import NodataType, RGBATuple, RGBTuple, SomeNumber
 
@@ -10,7 +10,7 @@ INF = float("INF")
 
 
 def lagiter(some_iterable: Iterable) -> Iterable:
-    """Lagged iteration of iterable"""
+    """Lagged iteration of iterable."""
     prevs, items = tee(some_iterable, 2)
     prevs = chain([None], prevs)
     return zip(prevs, items)
@@ -19,8 +19,8 @@ def lagiter(some_iterable: Iterable) -> Iterable:
 def hex_to_rgb(
     x: str,
     normalize: bool = False,
-) -> Union[RGBTuple, RGBATuple]:
-    "convert HEX string to RGB tuple"
+) -> RGBTuple | RGBATuple:
+    """Convert HEX string to RGB tuple."""
 
     def _maybe_norm(x):
         return x / 255 if normalize else x
@@ -35,7 +35,7 @@ def hex_to_rgb(
 
 
 def rgb_to_hex(c: Sequence[SomeNumber], normalize: bool = False) -> str:
-    """convert RGB tuple to HEX string"""
+    """Convert RGB tuple to HEX string."""
     assert len(c) in (3, 4)
     if normalize:
         c = [int(x * 255) for x in c]
@@ -45,10 +45,8 @@ def rgb_to_hex(c: Sequence[SomeNumber], normalize: bool = False) -> str:
     return "#" + "".join(f"{x:02x}" for x in c)
 
 
-def create_color_table(
-    ramp, nodata: Optional[NodataType] = None, filename: Optional[str] = None
-) -> str:
-    """Create gdal compliant color table from color ramp"""
+def create_color_table(ramp, nodata: NodataType | None = None, filename: str | None = None) -> str:  # noqa: PLR0915
+    """Create gdal compliant color table from color ramp."""
     # initialize table with nodata or empty
     ctable = "" if nodata is None else f"{nodata} 255 255 255 0\n"
 
@@ -70,7 +68,8 @@ def create_color_table(
             fobj.write_text(ctable, encoding="utf-8")
         except OSError as exc:
             print(
-                f"Failed to write to {filename} - does directory exists and do you have permissions for writing?"
+                f"Failed to write to {filename} - does directory exist "
+                "and do you have permissions for writing?"
             )
             raise exc
 

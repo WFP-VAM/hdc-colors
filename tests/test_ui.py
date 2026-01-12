@@ -1,10 +1,10 @@
 # pylint: disable=missing-function-docstring,redefined-outer-name,protected-access
-from rich.text import Text
-from rich.table import Table
 import pytest
+from rich.table import Table
+from rich.text import Text
 
 from hdc.colors._classes import HDCDiscreteRamp
-from hdc.colors.ui import _spawn_title, _table_gen, create_table, create_overview_table
+from hdc.colors.ui import _spawn_title, _table_gen, create_overview_table, create_table
 
 
 @pytest.fixture

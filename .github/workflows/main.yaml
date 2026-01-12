@@ -1,0 +1,177 @@
+name: Run Code Checks
+on:
+  push:
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+      
+      - name: Install dependencies
+        run: uv sync --locked --all-extras --dev
+      
+      - name: Run ruff format
+        run: |
+          uv run ruff --version
+          uv run ruff format --check hdc tests
+
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+      
+      - name: Install dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run ruff check
+        run: |
+          uv run ruff --version
+          uv run ruff check --output-format=github hdc tests
+      
+      - name: Run mypy
+        run: |
+          uv run mypy --version
+          uv run mypy --explicit-package-bases hdc
+
+  wheels:
+    needs:
+      - format
+      - linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+      
+      - name: Install dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - uses: actions/cache@v4
+        id: wheels_cache
+        with:
+          path: ./wheels
+          key: wheels-${{ github.sha }}
+
+      - name: Build wheels unpatched
+        if: steps.wheels_cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p wheels
+          uv build --wheel --out-dir wheels
+      
+      - name: Patch version
+        run: |
+          uv run python ./scripts/patch_version.py ${GITHUB_RUN_NUMBER:-0} ./hdc/colors/_version.py
+
+      - name: Build wheels patched version
+        if: steps.wheels_cache.outputs.cache-hit != 'true'
+        run: |
+          uv build --out-dir wheels
+
+      - name: Upload results (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels
+          path: wheels
+          if-no-files-found: error
+
+  tests:
+    needs:
+      - format
+      - linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+      
+      - name: Install dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run tests with coverage
+        run: |
+          uv run pytest -s \
+            --cov \
+            --cov-report=term \
+            tests/
+
+  test-wheel:
+    needs:
+      - format
+      - linting
+      - wheels
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: Get Wheels
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels
+          path: wheels
+
+      - name: Install dev wheel
+        run: |
+          WHEEL=$(find wheels/ -type f -name "*.dev*.whl" | head -1)
+          uv pip install --system "$WHEEL[ui,mpl]"
+
+      - name: Test code from the wheel
+        run: |
+          cd tests/
+          uv pip install --system pytest
+          uv run --no-project pytest -s .

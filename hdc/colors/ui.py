@@ -1,17 +1,18 @@
-"""Visualization stuff for UI"""
+"""Visualization stuff for UI."""
 
 import importlib
-from typing import Iterator, List, Optional, Tuple
+from collections.abc import Iterator
 
-from rich.table import Table
-from rich.text import Text
 from rich.rule import Rule
 from rich.style import Style
+from rich.table import Table
+from rich.text import Text
 
 from hdc.colors._classes import HDCDiscreteRamp
+from hdc.colors.hazards import __all__ as hazards_ramps
 from hdc.colors.rainfall import __all__ as rainfall_ramps
-from hdc.colors.vegetation import __all__ as vegetation_ramps
 from hdc.colors.temperature import __all__ as temperature_ramps
+from hdc.colors.vegetation import __all__ as vegetation_ramps
 
 
 def _spawn_title(name, **kwargs):
@@ -19,7 +20,7 @@ def _spawn_title(name, **kwargs):
 
 
 def create_table(name: str, color_ramp: HDCDiscreteRamp) -> Table:
-    """Create Rich table for colorramp"""
+    """Create Rich table for colorramp."""
     title = _spawn_title(name, color="deep_pink3", bold=True, italic=True)
     table = Table(show_header=True, header_style="bold orange_red1", title=title)
 
@@ -39,7 +40,7 @@ def create_table(name: str, color_ramp: HDCDiscreteRamp) -> Table:
 
 
 def _table_gen(
-    rel_module: str, all_ramps: List[str], ramp_filter: Optional[Tuple[str]] = None
+    rel_module: str, all_ramps: list[str], ramp_filter: tuple[str] | None = None
 ) -> Iterator[Table]:
     mod = importlib.import_module(rel_module, "hdc.colors")
     for ramp in all_ramps:
@@ -52,7 +53,7 @@ def _table_gen(
 
 
 def create_overview_table() -> Table:
-    """Create overview table for hdc.colors ramps"""
+    """Create overview table for hdc.colors ramps."""
 
     def _hline():
         r = Rule(style=Style(color="magenta"))
@@ -83,32 +84,46 @@ def create_overview_table() -> Table:
     for r in temperature_ramps:
         table.add_row(r, "Temperature", style=style)
 
+    table.add_row(*_hline())
+
+    # hazards
+    style = Style(color="yellow")
+    for r in hazards_ramps:
+        table.add_row(r, "Hazards", style=style)
+
     return table
 
 
 def generate_rainfall_tables(
-    ramp_filter: Optional[Tuple[str]] = None,
+    ramp_filter: tuple[str] | None = None,
 ) -> Iterator[Table]:
-    """Generate rainfall ramp tables"""
+    """Generate rainfall ramp tables."""
     yield from _table_gen(".rainfall", rainfall_ramps, ramp_filter)
 
 
 def generate_vegetation_tables(
-    ramp_filter: Optional[Tuple[str]] = None,
+    ramp_filter: tuple[str] | None = None,
 ) -> Iterator[Table]:
-    """Generate vegetation ramp tables"""
+    """Generate vegetation ramp tables."""
     yield from _table_gen(".vegetation", vegetation_ramps, ramp_filter)
 
 
 def generate_temperature_tables(
-    ramp_filter: Optional[Tuple[str]] = None,
+    ramp_filter: tuple[str] | None = None,
 ) -> Iterator[Table]:
-    """Generate temperature ramp tables"""
+    """Generate temperature ramp tables."""
     yield from _table_gen(".temperature", temperature_ramps, ramp_filter)
 
 
+def generate_hazards_tables(
+    ramp_filter: tuple[str] | None = None,
+) -> Iterator[Table]:
+    """Generate hazards ramp tables."""
+    yield from _table_gen(".hazards", hazards_ramps, ramp_filter)
+
+
 def color_warning() -> Rule:
-    """Create warning for low color console"""
+    """Create warning for low color console."""
     warning_msg = Rule(
         Text(
             "WARNING: Colors might not be represented accurately on low color mode consoles!",
