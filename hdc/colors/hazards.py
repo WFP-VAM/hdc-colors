@@ -6,8 +6,8 @@ from ._classes import HDCDiscreteRamp
 from .types import RampInput
 
 __all__ = [
-    "cdi",
     "w6dfwt",
+    "wai",
 ]
 
 ### w6d encoded flood wetland/trend
@@ -37,8 +37,8 @@ w6dfwt = HDCDiscreteRamp(
 )
 
 
-### CDI - Combined Drought Indicator
-cdi = HDCDiscreteRamp(
+### WAI - Water Availability Index
+wai = HDCDiscreteRamp(
     cast(
         RampInput,
         [
